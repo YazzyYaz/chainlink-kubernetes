@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: classic 
+  name: classic
+  namespace: future-oracle 
+  annotations:
+    cloud.google.com/app-protocols: '{"my-https-port":"HTTPS","my-http-port":"HTTP"}'
+spec:
+  selector:
+    app: classic
+  ports:
+  - name: default
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: websocket
+    port: 8546
+    protocol: TCP
+    targetPort: 8546
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  type: LoadBalancer
+  sessionAffinity: ClientIP
