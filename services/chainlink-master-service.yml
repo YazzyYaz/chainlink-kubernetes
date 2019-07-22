@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: classic 
-  name: classic
+    app: chainlink-master 
+  name: chainlink-master
   namespace: future-oracle 
   annotations:
     cloud.google.com/app-protocols: '{"my-https-port":"HTTPS","my-http-port":"HTTP"}'
 spec:
   selector:
-    app: classic
+    app: chainlink-master
   ports:
   - name: default
     protocol: TCP
@@ -19,9 +19,5 @@ spec:
     port: 8546
     protocol: TCP
     targetPort: 8546
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
-  type: LoadBalancer
+  type: NodePort 
   sessionAffinity: ClientIP
