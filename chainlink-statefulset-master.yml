@@ -1,0 +1,63 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: chainlink-master 
+  namespace: future-oracle 
+  labels:
+    app: chainlink-master
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: chainlink-master
+  serviceName: chainlink-master
+  template:
+    metadata:
+      name: chainlink-master
+      labels:
+        app: chainlink-master
+    spec:
+      containers:
+        - name: oracle 
+          image: "parity/parity:v2.5.2-beta"
+          imagePullPolicy: Always
+          args:
+          - "--chain=chainlink"
+          - "--snapshot-peers=50"
+          ports:
+            - containerPort: 8546
+              protocol: TCP
+              name: websocket
+            - containerPort: 443
+              protocol: TCP
+              name: https
+          #readinessProbe:
+          #  httpGet:
+          #    port: 8545
+          #    path: /api/health
+          #  initialDelaySeconds: 4500 
+          #  periodSeconds: 300
+          #livenessProbe:
+          #  tcpSocket:
+          #    port: 8545
+          #  initialDelaySeconds: 4500 
+          #  periodSeconds: 300
+          #volumeMounts:
+          #  - name: chainlink-config
+          #    mountPath: /chainlink-config
+          #    readOnly: true
+          #  - name: chainlink-data
+          #    mountPath: /chainlink-data
+    #volumes:
+    #  - name: chainlink-config
+    #    secret:
+    #      secretName: chainlink-config
+  #volumeClaimTemplates:
+  #  - metadata:
+  #      name: chainlink-data
+  #    spec:
+  #      accessModes: ["ReadWriteOnce"]
+  #      storageClassName: "chainlink-ssd"
+  #      resources:
+  #        requests:
+  #          storage: 50Gi
